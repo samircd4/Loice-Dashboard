@@ -1,0 +1,93 @@
+import { useEffect, useState } from "react";
+import { Link, Shirt, X } from "lucide-react";
+import Button from "./UI/Button";
+import Input from "./UI/Input";
+
+export default function ImportLinkModal({ isOpen, onClose }) {
+  const [url, setUrl] = useState("");
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+
+      <div
+        className="relative w-full max-w-md bg-bg-card border border-border rounded-2xl shadow-[0_24px_80px_rgba(0,0,0,0.6)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-6">
+          <div className="flex items-start justify-between gap-4 mb-6">
+            <div className="flex items-start gap-3">
+              <div className="w-9 h-9 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center flex-shrink-0">
+                <Link size={16} className="text-accent" strokeWidth={1.75} />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold text-text-primary">
+                  Import from Link
+                </h2>
+                <p className="text-xs text-text-muted mt-1">
+                  Paste a product URL to add to your wardrobe
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Close"
+              className="w-8 h-8 rounded-full bg-bg-card-hover hover:bg-[#222222] border border-border flex items-center justify-center text-text-muted hover:text-text-primary transition-colors cursor-pointer flex-shrink-0"
+            >
+              <X size={16} strokeWidth={1.75} />
+            </button>
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-[10px] font-semibold tracking-wider text-text-muted uppercase mb-2">
+              Product URL
+            </label>
+            <Input
+              icon={Link}
+              placeholder="https://www.asos.com/..."
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              className="[&_input]:h-10 [&_input]:border-accent/40 [&_input]:focus:border-accent"
+            />
+            <p className="text-[11px] text-text-muted mt-2.5 leading-relaxed">
+              Supported: ASOS, Zara, COS, H&M, Mango, ARKET, Net-a-Porter,
+              FARFETCH, and more
+            </p>
+          </div>
+
+          <Button
+            variant="primary"
+            size="md"
+            icon={Shirt}
+            className="w-full h-10 text-sm"
+            disabled={!url.trim()}
+          >
+            Add to My Wardrobe
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
