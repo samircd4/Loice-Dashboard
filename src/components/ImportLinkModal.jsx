@@ -3,7 +3,9 @@ import { Link, Shirt, X } from "lucide-react";
 import Button from "./UI/Button";
 import Input from "./UI/Input";
 
-const API_BASE_URL = "/api";
+const API_BASE_URL = import.meta.env.DEV
+    ? "/api"
+    : import.meta.env.VITE_API_BASE_URL || "https://api.sarker.shop";
 
 function resolveEndpoint(productUrl) {
     const normalizedUrl = productUrl.toLowerCase();
